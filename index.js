@@ -7,6 +7,12 @@ const docker = new Docker({
 
 docker.createContainer = Promise.promisify(docker.createContainer)
 
+// gcc 编译 c++ : gcc main.cpp -lstdc++ -o main
+// 执行测试: ./main < test.txt
+// 运行 Docker 测试: docker run -it -v /home/ruiming/Desktop:/data ruiming/gcc /bin/bash
+
+// 启动容器 docker run -i -t ubuntu bash
+//
 async function run() {
     try {
         // 创建容器
@@ -19,7 +25,7 @@ async function run() {
             AttachStderr: true,
             Tty:          true,
             Cmd:          ['/bin/bash'],
-            Binds:        ['/home/ruiming/Desktop:/cpp']
+            Binds:        ['/home/ruiming/Desktop:/data']
         })
         container.start  = Promise.promisify(container.start)
         container.exec   = Promise.promisify(container.exec)
@@ -28,9 +34,11 @@ async function run() {
         // 启动容器, 执行命令
         await container.start()
         const exec = await container.exec({
-            Cmd:          ['./cpp/main.o', '<', './cpp/main.in'],
+            /* eslint-disable */
+            Cmd:          ["/bin/sh", "-c", "./data/main < ./data/test.txt"],
             AttachStdin:  true,
             AttachStdout: true
+            /* eslint-enable */
         })
         exec.start   = Promise.promisify(exec.start)
         exec.inspect = Promise.promisify(exec.inspect)
