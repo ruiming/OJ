@@ -7,11 +7,12 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "dockerode": "^2.3.1",
-    "mongoose": "^4.7.1",
+    "fs-extra": "^1.0.0",
     "koa": "next",
     "koa-bodyparser": "next",
     "koa-router": "next",
     "koa-swig": "2.2.0",
+    "mongoose": "^4.7.1",
     "swig": "^1.4.2"
   }
 }
