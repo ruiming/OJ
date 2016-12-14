@@ -34,7 +34,6 @@ async function check(cpp) {
         container.stop   = Promise.promisify(container.stop)
         container.remove = Promise.promisify(container.remove)
         // 启动容器, 执行命令
-        // TODO x
         await container.start()
         let cmd = ['/bin/sh', '-c', `./data/${cpp} < ./data/${cpp}.in > ./data/${cpp}.out`]
         const exec = await container.exec({

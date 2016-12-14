@@ -5,7 +5,7 @@ const router = require('./server/routes/index.js')
 
 const app = new Koa()
 
-app.use(bodyparser({ multipart: true }))
+app.use(bodyparser())
 
 app.use(router.routes())
    .use(router.allowedMethods())
