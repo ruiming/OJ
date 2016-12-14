@@ -14,7 +14,8 @@ docker.createContainer = Promise.promisify(docker.createContainer)
 
 // 启动容器 docker run -i -t ubuntu bash
 // src: 用户代码名
-async function run(src) {
+// TODO: Docker 优化以及运行监测
+async function check(cpp) {
     try {
         // 创建容器
         // Image: 已经 pull 的镜像
@@ -33,22 +34,19 @@ async function run(src) {
         container.stop   = Promise.promisify(container.stop)
         container.remove = Promise.promisify(container.remove)
         // 启动容器, 执行命令
-        // FIXME g++ 编译??
+        // TODO x
         await container.start()
+        let cmd = ['/bin/sh', '-c', `./data/${cpp} < ./data/${cpp}.in > ./data/${cpp}.out`]
         const exec = await container.exec({
-            /* eslint-disable */
-            Cmd:          ["g++", "/data/2770.cpp", "-o", "/data/2770", "-v"],
+            Cmd:          cmd,
             AttachStdin:  true,
             AttachStdout: true
-            /* eslint-enable */
         })
         exec.start   = Promise.promisify(exec.start)
         exec.inspect = Promise.promisify(exec.inspect)
         const stream = await exec.start({
             stdin:  true,
-            hijack: true,
-            stdout: true,
-            stderr: true
+            hijack: true
         })
         stream.setEncoding('utf8')
         stream.pipe(process.stdout)
@@ -60,4 +58,4 @@ async function run(src) {
     }
 }
 
-module.exports = run
+module.exports = check
